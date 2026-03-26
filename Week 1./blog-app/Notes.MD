@@ -200,3 +200,77 @@ src/constants/
 | Dashboard-only state | `features/dashboard/store.ts` |
 | Global TypeScript types | `types/` |
 | Feature-specific types | `features/[name]/types.ts` |
+
+
+## BUILDING THE APP.
+
+### Setiing up Dark Theme using Tailwind CSS.
+
+-This is easily set up once Tailwind CSS is installed inside the project.
+
+-It provides a 'dark' variant that enables one to add styles for the dark theme.
+
+-In the file where we are importing tailwind css, add this line:
+
+    @custom-variant dark (&:where(.dark, .dark *));
+
+-This ensures the dark theme applies automatically whenever the 'dark' variant is used.
+
+-This is when we use the 'dark' variant as a class.
+
+-To add the toggle logic, where one clicks on a button and the theme switches from one to the other, this is the generic template for handling it:
+
+    //hooks/useDarkMode.ts
+
+    import { useEffect, useState } from 'react';
+
+    type Theme = 'light' | 'dark';
+
+    export function useDarkMode(): [Theme, () => void]{
+        
+        const [theme, setTheme] = useState<Theme>(() => {
+            const saved = localStorage.getItem('theme') as Theme | null;
+            return saved === 'dark' || saved === 'light' ? saved : 'light';
+        });
+        //this checks if there's a saved theme, otherwise default to light
+
+
+       useEffect(() => {
+        const root = window.document.documentElement;
+
+        if(theme === 'dark') {
+            root.classList.add('dark');
+        }
+        else {
+            root.classList.remove('dark');
+        }
+
+        //persist the choice
+        localStorage.setItem('theme', theme);
+       }, [theme]);
+
+        const toggleTheme = () => {
+            setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+        };
+
+        return [theme, toggleTheme];
+    }
+
+-How would we use this hook in our component?
+
+    import { useDarkMode } from '//path to Dark Theme hook';
+
+    const ThemeToggle: React.FC = () => {
+        const [theme, toggleTheme] = useDarkMode();
+
+        return (
+            <button
+            onClick={toggleTheme}
+            className='styles here'>
+
+            {theme === 'light' ? 'moon icon' : 'sun icon'}
+
+            </button>
+        );
+    };
+
