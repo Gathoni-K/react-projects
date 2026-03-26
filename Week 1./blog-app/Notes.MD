@@ -274,3 +274,157 @@ src/constants/
         );
     };
 
+### Defining Styles for a Group.
+
+-This is mostly useful when two or more elements share the same styles.
+
+-The generic template for handling this would be:
+
+    const styles = `
+    <!-- styles go here -->
+
+    <button className={styles}>
+    //this is how they styles are used in the elements
+
+    `
+
+### Styling Cheat Codes:
+
+1.Making an image round;
+
+    rounded-full w-24 h-24
+    //width and height should be the same number
+
+2.
+
+### Constant Styles in Components.
+
+#### 1.NavBar.
+
+    <nav className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/75 dark:bg-gray-950/75 backdrop-blur-lg"
+    >
+
+    <div className="max-w-7xl m-auto px-4 h-16 flex items-center justify-between"
+    >
+    {/*logo and link actions go here*/}
+    <div>
+
+    </nav>
+
+#### 2.Footer.
+
+
+    const Footer: React.FC = () => {
+        const currentYear = new Date().getFullYear();
+
+        return(
+            <footer className="w-full bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+
+            <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+
+            <!-- main footer content -->
+            <div className= "grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+
+            <!-- Brand section -->
+            <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4"> //logo here
+            <span className="text-xl font-bold dark:text-white"> Brand Name</span>
+            </div>
+
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+            Building the next generation of web experiences with speed and precision
+            </p>
+            </div>
+
+            <!-- link columns -->
+            <div className="grid grid-cols-2 gap-8 col-span-1 md:col-span-2">
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Product</h3>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">Integrations</a></li>
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">Changelog</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Social</h3>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">Twitter</a></li>
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">GitHub</a></li>
+                <li><a href="#" className="hover:text-indigo-500 transition-colors">Discord</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Newsletter/CTA */}
+          <div className="col-span-1">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Stay Updated</h3>
+            <div className="flex gap-2">
+              <input 
+                type="email" 
+                placeholder="Email address"
+                className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 4. The Legal Strip */}
+        <div className="pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            © {currentYear} Ripple Inc. All rights reserved.
+          </p>
+          <div className="flex gap-6 text-xs text-gray-500 dark:text-gray-400">
+            <a href="#" className="hover:underline">Privacy Policy</a>
+            <a href="#" className="hover:underline">Terms of Service</a>
+          </div>
+        </div>
+
+      </div>
+        </footer>
+    );
+    };
+
+    export default Footer;
+
+        
+#### 3.Layout.
+
+-File letting the navbar and footer be on every page of our website without importing the two components in every page.
+
+    import NavBar from '//path to NavBar';
+    import Footer from '//path to Footer';
+    import type { ReactNode } from 'react';
+
+    interface LayoutProps{
+        children: ReactNode;
+    }
+
+    const Layout = ({children}: LayoutProps) => {
+        return (
+            <div>
+            <NavBar />
+
+            <main>
+            {children}
+            </main>
+
+            <Footer />
+
+            </div>
+        )
+    };
+
+    export default Layout;
+
+-Then in every page,
+
+    import Layout from '//path to Layout';
+
+    return (
+        <Layout>
+            //other components of the page go here
+        </Layout>
+    )
+

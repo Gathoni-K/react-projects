@@ -8,7 +8,7 @@ const ThemeToggle: React.FC = () => {
     return (
         <button
         onClick = {toggleTheme}
-        className=""
+        className="dark:text-gray-50 text-gray-950 text-xl"
         >
 
             {theme === 'light' ? <LuMoon /> : <CiSun /> }
