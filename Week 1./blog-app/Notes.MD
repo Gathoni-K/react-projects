@@ -403,7 +403,8 @@ src/constants/
 
     const Layout = ({children}: LayoutProps) => {
         return (
-            <div>
+            <div className="bg-white dark:bg-gray-950">
+            //ensures dark mode is applied to the body of our page.
             <NavBar />
 
             <main>
@@ -428,3 +429,129 @@ src/constants/
         </Layout>
     )
 
+### 4.Buttons.
+
+-Creating a reusable component holding all variations of buttons available in our app.
+
+    type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'danger' | 'amber';
+    type ButtonSize = 'sm' | 'md' | 'lg';
+
+    interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+        variant?: ButtonVariant;
+        size?: ButtonSize;
+        isLoading?: boolean;
+        leftIcon?: React.ReactNode;
+        right?Icon?: React.ReactNode;
+        children: React.ReactNode;
+    };
+
+    const base = 
+    'inline-flex items-center justify-center gap-2 font-medium rounded-lg border ' + 'transition-all duration-150 outline-none select-none cursor-pointer ' + 'focus-visible:ring-2 focus-visible:ring-offset-2 ' + 'focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-950 ' + 'active:scale-[0.97] disabled:opacity-45 disabled:pointer-events-none';
+
+    const variants: Record<ButtonVariant, string> = {
+          primary:
+        'bg-gray-950 text-white border-gray-950 ' +
+        'hover:bg-gray-800 hover:border-gray-800 ' +
+        'dark:bg-gray-50 dark:text-gray-950 dark:border-gray-50 ' +
+        'dark:hover:bg-gray-200 dark:hover:border-gray-200 ' +
+        'focus-visible:ring-gray-950 dark:focus-visible:ring-gray-50',
+    
+    outline:
+        'bg-transparent text-gray-900 border-gray-300 ' +
+        'hover:bg-gray-100 hover:border-gray-400 ' +
+        'dark:text-gray-100 dark:border-gray-600 ' +
+        'dark:hover:bg-gray-800 dark:hover:border-gray-500 ' +
+        'focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500',
+    
+    ghost:
+        'bg-transparent text-gray-600 border-transparent ' +
+        'hover:bg-gray-100 hover:text-gray-900 ' +
+        'dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 ' +
+        'focus-visible:ring-gray-300',
+    
+    amber:
+        'bg-amber-400 text-amber-950 border-amber-400 ' +
+        'hover:bg-amber-500 hover:border-amber-500 ' +
+        'dark:bg-amber-400 dark:text-amber-950 ' +
+        'dark:hover:bg-amber-500 dark:hover:border-amber-500 ' +
+        'focus-visible:ring-amber-400',
+    
+    danger:
+        'bg-transparent text-red-600 border-red-200 ' +
+        'hover:bg-red-50 hover:border-red-300 ' +
+        'dark:text-red-400 dark:border-red-900 ' +
+        'dark:hover:bg-red-950 dark:hover:border-red-700 ' +
+        'focus-visible:ring-red-400',
+    };
+        const sizes: Record<ButtonSize, string> = {
+    sm: 'text-xs px-3 py-1.5',
+    md: 'text-sm px-5 py-2.5',
+    lg: 'text-base px-7 py-3',
+    };
+    
+    const Button: React.FC<ButtonProps> = ({
+    variant = 'outline',
+    size = 'md',
+    isLoading = false,
+    leftIcon,
+    rightIcon,
+    children,
+    className = '',
+    disabled,
+    ...props
+    }) => {
+    return (
+        <button
+        className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+        disabled={disabled || isLoading}
+        {...props}
+        >
+        {isLoading ? (
+            <svg
+            className="animate-spin h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            >
+            <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+            />
+            <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+            />
+            </svg>
+        ) : leftIcon ? (
+            <span className="text-base leading-none">{leftIcon}</span>
+        ) : null}
+    
+        {children}
+    
+        {!isLoading && rightIcon && (
+            <span className="text-base leading-none">{rightIcon}</span>
+        )}
+        </button>
+    );
+    };
+    
+    export default Button;
+
+-We use it in other components as shown below:
+
+    import Button from '@/components/Button';
+
+    // saving changes
+    <Button variant="primary" isLoading={isSaving} onClick={handleSave}>
+    Save Changes
+    </Button>
+
+    // destructive action
+    <Button variant="danger" onClick={handleDeleteAccount}>
+    Delete Account
+    </Button>
